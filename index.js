@@ -1,8 +1,23 @@
 
 const express = require('express');
+const cors = require('cors');
+const { dbConnection } = require('./db/config');
+require('dotenv').config();
 
 // Crear el servidor/aplicación de Express
 const app = express();
+
+// Base de datos
+dbConnection();
+
+// Directorio Público
+app.use( express.static('public'));
+
+// CORS
+app.use( cors() );
+
+// Lectura y parseo del body
+app.use( express.json() );
 
 // Rutas
 app.use( '/auth', require( './routes/auth' ) );
@@ -22,6 +37,6 @@ app.get('/', ( req, res ) => {
 
 
 
-app.listen( 4000, () => {
-    console.log(`Servidor corriendo en puerto ${ 4000 }`);
+app.listen( process.env.PORT, () => {
+    console.log(`Servidor corriendo en puerto ${ process.env.PORT }`);
 });
