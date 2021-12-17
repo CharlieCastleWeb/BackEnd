@@ -40,7 +40,6 @@ const registerUser = async ( req, res = response ) => {
             organizationType,
             token
         });
-
     } catch (error) {
         console.log(error);
         return res.status(500).json({
@@ -48,27 +47,65 @@ const registerUser = async ( req, res = response ) => {
             msg: 'Wrong Credentials'
         })
     }
-
-
-    
-    
-    
 }
 
-const loginUser = (req, res = response ) => {
+const loginUser = async (req, res = response ) => {
 
     const { email, password } = req.body;
 
-    return res.json({
-        ok: true,
-        msg: 'Login usuario /login'
-    })
+    try {
+        
+        const dbUser = await Usuario.findOne({ email });
+
+        if ( !dbUser ) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'Wrong credentials'
+            });
+        }
+
+        // Confirmar si el password coincide
+        const validPassword = bcrypt.compareSync( password, dbUser.password );
+
+        if ( !validPassword ) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'Wrong Password'
+            });
+        }
+
+        // Generar JWT
+        const token = await generarJWT( dbUser.id, dbUser.name );
+
+        // Respuesta del servicio
+        return res.json({
+            ok: true,
+            uid: dbUser.id,
+            name: dbUser.name,
+            token
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg: 'Please contact admin'
+        });
+    }
 }
 
-const renewToken = (req, res = response ) => {
+const renewToken = async (req, res = response ) => {
+    
+    const { uid, name } = req;
+    
+    // Generar JWT
+    const token = await generarJWT( uid, name );
+    
     return res.json({
         ok: true,
-        msg: 'Renew token /renew'
+        uid,
+        name,
+        token
     })
 }
 
