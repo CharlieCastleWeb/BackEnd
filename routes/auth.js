@@ -12,7 +12,10 @@ router.post( '/register', [
     check('name', 'Please provide a name').not().isEmpty(),
     check('email', 'Please provide a valid email').isEmail(),
     // TODO hacer validación correcta del password 
-    check('password', 'Please provide a valid password').isLength({min: 6}),
+    check('password', 'Please provide a valid password')
+        .isLength({min: 6})
+        .isLength({max: 10})
+        .matches(/^(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,10}$/),
     check('organizationType', 'Please provide a valid organization Type').not().isEmpty(),
     validarCampos 
 ], registerUser);
@@ -20,8 +23,10 @@ router.post( '/register', [
 // Login de usuario
 router.post( '/login', [
     check('email', 'Please provide a valid email').isEmail(),
-    // TODO hacer validación correcta del password 
-    check('password', 'Please provide a valid password').isLength({min: 6}),
+    check('password', 'Please provide a valid password')
+        .isLength({min: 6})
+        .isLength({max: 10})
+        .matches(/^(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,10}$/),
     validarCampos     
 ], loginUser);
 
