@@ -18,6 +18,10 @@ const UsuarioSchema = Schema({
     organizationType: {
         type: String,
         required: true
+    },
+    projectList: {
+        type: Array,
+        required: false
     }
 });
 

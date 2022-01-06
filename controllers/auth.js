@@ -83,7 +83,9 @@ const loginUser = async (req, res = response ) => {
             uid: dbUser.id,
             name: dbUser.name,
             email: dbUser.email,
-            token
+            token,
+            organizationType: dbUser.organizationType,
+            projectList: dbUser.projectList
         });
 
     } catch (error) {
@@ -110,7 +112,9 @@ const renewToken = async (req, res = response ) => {
         uid,
         name: dbUser.name,
         email: dbUser.email,
-        token
+        token,
+        organizationType: dbUser.organizationType,
+        projectList: dbUser.projectList
     })
 }
 
